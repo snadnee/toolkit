@@ -11,7 +11,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class GitHooksSetupCommand extends Command
 {
     const GIT_HOOKS_DIRECTORY_NAME = '.githooks';
+
     const GIT_HOOKS_TEMPLATE_PROJECT_URL = 'git@github.com:snadnee/Snadnee.git';
+
     const GIT_HOOKS_TEMPLATE_PROJECT_BRANCH = 'master';
 
     /**
