@@ -2,13 +2,13 @@
 
 namespace Snadnee\Toolkit\Actions;
 
-use Snadnee\Toolkit\Traits\Makeable;
 use Mockery;
 use Mockery\Exception\RuntimeException;
 use Mockery\Expectation;
 use Mockery\ExpectationInterface;
 use Mockery\MockInterface;
 use ReflectionException;
+use Snadnee\Toolkit\Traits\Makeable;
 
 abstract class Action
 {

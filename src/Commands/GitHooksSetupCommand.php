@@ -11,7 +11,9 @@ use Symfony\Component\Finder\SplFileInfo;
 class GitHooksSetupCommand extends Command
 {
     const string GIT_HOOKS_DIRECTORY_NAME = '.githooks';
+
     const string GIT_HOOKS_TEMPLATE_PROJECT_URL = 'git@github.com:snadnee/Snadnee.git';
+
     const string GIT_HOOKS_TEMPLATE_PROJECT_BRANCH = 'master';
 
     /**
@@ -30,8 +32,6 @@ class GitHooksSetupCommand extends Command
 
     /**
      * Folder name for temporary cloned project with template git-hooks.
-     *
-     * @var string
      */
     private string $tempGitHooksProjectFolderName;
 
@@ -42,20 +42,18 @@ class GitHooksSetupCommand extends Command
      */
     public function __construct()
     {
-        $this->tempGitHooksProjectFolderName = now()->format('Y_m_d') . '_git_hooks_temp_project';
+        $this->tempGitHooksProjectFolderName = now()->format('Y_m_d').'_git_hooks_temp_project';
         parent::__construct();
     }
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
     public function handle(): int
     {
         $gitHooksFolderAlreadyExist = File::exists(self::GIT_HOOKS_DIRECTORY_NAME);
 
-        if (!$gitHooksFolderAlreadyExist) {
+        if (! $gitHooksFolderAlreadyExist) {
             $this->createGitHooksDirectory();
         }
 
@@ -71,9 +69,9 @@ class GitHooksSetupCommand extends Command
 
         $this->setupGitHooksPath();
 
-        $successMessage = "All done. Git hooks set up successfully.";
-        if (!$gitHooksFolderAlreadyExist) {
-            $successMessage .= " Please restart your IDE.";
+        $successMessage = 'All done. Git hooks set up successfully.';
+        if (! $gitHooksFolderAlreadyExist) {
+            $successMessage .= ' Please restart your IDE.';
         }
 
         $this->info($successMessage);
@@ -108,23 +106,23 @@ class GitHooksSetupCommand extends Command
      */
     public function readGitHookFilesFromClonedRepository($silent = false): array
     {
-        if (!$silent) {
+        if (! $silent) {
             $this->info('Reading template git-hook files from cloned repository.');
         }
 
-        return File::files($this->tempGitHooksProjectFolderName . '/' . self::GIT_HOOKS_DIRECTORY_NAME);
+        return File::files($this->tempGitHooksProjectFolderName.'/'.self::GIT_HOOKS_DIRECTORY_NAME);
     }
 
     public function saveGitHookFiles(array $gitHookFiles, $force = false, $silent = false): void
     {
         foreach ($gitHookFiles as $gitHookFile) {
-            if (File::exists(self::GIT_HOOKS_DIRECTORY_NAME . '/' . $gitHookFile->getFilename())) {
-                if (!$force && !$this->confirm("Git hook file [{$gitHookFile->getFilename()}] already exists. Override?")) {
+            if (File::exists(self::GIT_HOOKS_DIRECTORY_NAME.'/'.$gitHookFile->getFilename())) {
+                if (! $force && ! $this->confirm("Git hook file [{$gitHookFile->getFilename()}] already exists. Override?")) {
                     continue;
                 }
             }
 
-            $gitHookFileName = self::GIT_HOOKS_DIRECTORY_NAME . '/' . $gitHookFile->getFilename();
+            $gitHookFileName = self::GIT_HOOKS_DIRECTORY_NAME.'/'.$gitHookFile->getFilename();
             File::put($gitHookFileName, $gitHookFile->getContents());
             $this->addFileToGit($gitHookFileName, $silent);
         }
@@ -132,7 +130,7 @@ class GitHooksSetupCommand extends Command
 
     private function addFileToGit(string $gitHookFileName, $silent = false): void
     {
-        if (!$silent) {
+        if (! $silent) {
             $this->info("Adding [$gitHookFileName] file to git.");
         }
 
@@ -141,7 +139,7 @@ class GitHooksSetupCommand extends Command
 
     public function ensureAllGitHookFilesAreExecutable($silent = false): void
     {
-        if (!$silent) {
+        if (! $silent) {
             $this->info('Ensuring all git hook files are executable.');
         }
 
@@ -172,19 +170,19 @@ class GitHooksSetupCommand extends Command
 
     public function setupGitHooksPath($silent = false): void
     {
-        if (!$silent) {
+        if (! $silent) {
             $this->info('Setting up git hooks path.');
         }
 
-        exec("git rev-parse --git-path hooks", $gitHooksPath);
+        exec('git rev-parse --git-path hooks', $gitHooksPath);
         if ($gitHooksPath[0] !== self::GIT_HOOKS_DIRECTORY_NAME) {
-            exec('git config core.hooksPath ' . self::GIT_HOOKS_DIRECTORY_NAME);
+            exec('git config core.hooksPath '.self::GIT_HOOKS_DIRECTORY_NAME);
 
-            if (!$silent) {
+            if (! $silent) {
                 $this->info('Git hooks path set up successfully');
             }
         } else {
-            if (!$silent) {
+            if (! $silent) {
                 $this->info('Git hooks path already set up correctly');
             }
         }

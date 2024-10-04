@@ -6,6 +6,6 @@ class RemoveFolderAction extends Action
 {
     public function run(string $path): void
     {
-        exec('rm -rf ' . $path);
+        exec('rm -rf '.$path);
     }
 }

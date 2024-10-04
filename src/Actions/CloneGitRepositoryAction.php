@@ -8,7 +8,7 @@ class CloneGitRepositoryAction extends Action
 {
     public function run(string $url, string $branch, string $target): void
     {
-        $filesSystem = new Filesystem();
+        $filesSystem = new Filesystem;
 
         $filesSystem->ensureDirectoryExists($target);
 
