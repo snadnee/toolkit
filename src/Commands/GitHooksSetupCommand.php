@@ -10,11 +10,9 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class GitHooksSetupCommand extends Command
 {
-    const string GIT_HOOKS_DIRECTORY_NAME = '.githooks';
-
-    const string GIT_HOOKS_TEMPLATE_PROJECT_URL = 'git@github.com:snadnee/Snadnee.git';
-
-    const string GIT_HOOKS_TEMPLATE_PROJECT_BRANCH = 'master';
+    const GIT_HOOKS_DIRECTORY_NAME = '.githooks';
+    const GIT_HOOKS_TEMPLATE_PROJECT_URL = 'git@github.com:snadnee/Snadnee.git';
+    const GIT_HOOKS_TEMPLATE_PROJECT_BRANCH = 'master';
 
     /**
      * The name and signature of the console command.
