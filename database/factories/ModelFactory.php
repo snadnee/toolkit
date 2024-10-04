@@ -1,6 +1,6 @@
 <?php
 
-namespace Snadnee\Skeleton\Database\Factories;
+namespace Snadnee\Toolkit\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 

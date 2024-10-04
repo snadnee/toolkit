@@ -1,5 +1,5 @@
 <?php
 
-use Snadnee\Skeleton\Tests\TestCase;
+use Snadnee\Toolkit\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

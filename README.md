@@ -61,7 +61,7 @@ php artisan vendor:publish --tag=":package_slug-views"
 ## Usage
 
 ```php
-$variable = new Snadnee\Skeleton();
+$variable = new Snadnee\Toolkit();
 echo $variable->echoPhrase('Hello, Snadnee!');
 ```
 
