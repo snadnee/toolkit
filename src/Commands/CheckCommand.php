@@ -34,22 +34,27 @@ class CheckCommand extends Command
     {
         if ($this->option('packages')) {
             $this->checkPackages();
+
             return Command::SUCCESS;
         }
         if ($this->option('spelling')) {
             $this->checkSpelling();
+
             return Command::SUCCESS;
         }
         if ($this->option('git-hooks')) {
             $this->checkGitHooks();
+
             return Command::SUCCESS;
         }
         if ($this->option('env-variables')) {
             $this->checkEnvVariables();
+
             return Command::SUCCESS;
         }
 
         $this->checkAll();
+
         return Command::SUCCESS;
     }
 
@@ -69,7 +74,7 @@ class CheckCommand extends Command
         $result = Process::run("composer outdated $packageName --direct --format=json");
         $outdatedInfo = json_decode($result->output(), true);
         if (Arr::last($outdatedInfo['versions']) !== $outdatedInfo['latest']) {
-            $this->warn('Toolkit is not up to date. Current version: ' . $outdatedInfo['version'] . ', latest version: ' . $outdatedInfo['latest']);
+            $this->warn('Toolkit is not up to date. Current version: '.$outdatedInfo['version'].', latest version: '.$outdatedInfo['latest']);
         } else {
             $this->info('Toolkit is up to date.');
         }
@@ -92,18 +97,18 @@ class CheckCommand extends Command
         ];
 
         foreach ($required_variables as $variable) {
-            if (!env($variable)) {
-                $this->output->error('Missing required ENV variable: ' . $variable);
+            if (! env($variable)) {
+                $this->output->error('Missing required ENV variable: '.$variable);
             }
         }
     }
 
     private function checkGitHooks(): void
     {
-        $gitHooksSetupCommand = new GitHooksSetupCommand();
+        $gitHooksSetupCommand = new GitHooksSetupCommand;
         $gitHooksFolderAlreadyExist = File::exists(GitHooksSetupCommand::GIT_HOOKS_DIRECTORY_NAME);
 
-        if (!$gitHooksFolderAlreadyExist) {
+        if (! $gitHooksFolderAlreadyExist) {
             if ($this->confirm('Do you want to set up git hooks?')) {
                 $this->callSilently('git:setup-hooks');
             }
@@ -115,17 +120,17 @@ class CheckCommand extends Command
             $same_version = true;
 
             foreach ($gitHookFiles as $gitHookFile) {
-                if (!File::exists(GitHooksSetupCommand::GIT_HOOKS_DIRECTORY_NAME . '/' . $gitHookFile->getFilename())) {
+                if (! File::exists(GitHooksSetupCommand::GIT_HOOKS_DIRECTORY_NAME.'/'.$gitHookFile->getFilename())) {
                     $same_version = false;
                     break;
                 }
-                if (sha1_file($gitHookFile->getPathname()) !== sha1_file(GitHooksSetupCommand::GIT_HOOKS_DIRECTORY_NAME . '/' . $gitHookFile->getFilename())) {
+                if (sha1_file($gitHookFile->getPathname()) !== sha1_file(GitHooksSetupCommand::GIT_HOOKS_DIRECTORY_NAME.'/'.$gitHookFile->getFilename())) {
                     $same_version = false;
                     break;
                 }
             }
 
-            if (!$same_version) {
+            if (! $same_version) {
                 $this->warn('Git hooks are not up to date.');
                 if ($this->confirm('Do you want to update git hooks?')) {
                     $gitHooksSetupCommand->saveGitHookFiles($gitHookFiles, true, true);
@@ -143,7 +148,6 @@ class CheckCommand extends Command
 
     }
 
-
     private function checkSpelling(): void
     {
         $langPaths = config('toolkit.spell-check.langPaths');
@@ -151,6 +155,7 @@ class CheckCommand extends Command
 
         if (empty($langPaths)) {
             $this->warn('No language files found');
+
             return;
         }
 
@@ -159,6 +164,7 @@ class CheckCommand extends Command
                 $files = File::files(base_path($langPath));
             } catch (\Exception $e) {
                 $this->output->error('No language files found');
+
                 return;
             }
             foreach ($files as $j => $file) {
@@ -166,7 +172,7 @@ class CheckCommand extends Command
                     $this->line('');
                 }
                 $lang = substr($file->getFilename(), 0, 2);
-                $langString = config('spellCheck.langString.' . $lang);
+                $langString = config('spellCheck.langString.'.$lang);
                 $this->info("Checking spelling for $langString");
                 [$misspellingsCounter, $messages] = $this->checkSpellingForLang($file, $langString);
 
@@ -188,8 +194,8 @@ class CheckCommand extends Command
     /**
      * Check the spelling for a specific language file.
      *
-     * @param string $langPath The path to the language file. - e.g. '/lang/cs.json'
-     * @param string $langString The language string. - e.g. 'cs_CZ'
+     * @param  string  $langPath  The path to the language file. - e.g. '/lang/cs.json'
+     * @param  string  $langString  The language string. - e.g. 'cs_CZ'
      */
     private function checkSpellingForLang(string $langPath, string $langString): array
     {
@@ -233,14 +239,13 @@ class CheckCommand extends Command
                 $misspellingsCounter++;
                 $suggestions = $misspelling->getSuggestions();
 
-                $messages[] = 'Misspelling: ' . $misspelling->getWord() . '=>' . implode(', ', array_splice($suggestions, 0, 5));
+                $messages[] = 'Misspelling: '.$misspelling->getWord().'=>'.implode(', ', array_splice($suggestions, 0, 5));
             }
         }
 
         return [$misspellingsCounter, $messages];
 
     }
-
 
     /**
      * Check if all common packages are installed in the Laravel application.
@@ -250,7 +255,7 @@ class CheckCommand extends Command
         $packages = [
             'require' => [
                 'snadnee/packages-enums',
-                'spatie/ignition'
+                'spatie/ignition',
             ],
             'require-dev' => [
                 'barryvdh/laravel-ide-helper',
@@ -259,7 +264,7 @@ class CheckCommand extends Command
                 'nunomaduro/larastan',
                 'enlightn/enlightn',
                 'driftingly/rector-laravel',
-            ]
+            ],
         ];
 
         $missingPackages = [];
@@ -267,7 +272,7 @@ class CheckCommand extends Command
 
         foreach ($packages as $type => $packageList) {
             foreach ($packageList as $packageName) {
-                if (!$this->isPackageInstalled($type, $packageName)) {
+                if (! $this->isPackageInstalled($type, $packageName)) {
                     $type_test = $type === 'require' ? 'require-dev' : 'require';
 
                     if ($this->isPackageInstalled($type_test, $packageName)) {
@@ -279,7 +284,7 @@ class CheckCommand extends Command
             }
         }
 
-        if (!empty($missingPackages)) {
+        if (! empty($missingPackages)) {
             $this->warn('Some packages are missing in your the Laravel application.');
 
             foreach ($missingPackages as $package => $type) {
@@ -308,8 +313,7 @@ class CheckCommand extends Command
     /**
      * Check if a package is installed in the Laravel application.
      *
-     * @param string $packageName
-     * @return bool
+     * @param  string  $packageName
      */
     private function isPackageInstalled($type, $packageName): bool
     {

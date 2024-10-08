@@ -33,5 +33,5 @@ return [
             'tr' => 'tr_TR',
             'uk' => 'uk_UA',
         ],
-    ]
+    ],
 ];
