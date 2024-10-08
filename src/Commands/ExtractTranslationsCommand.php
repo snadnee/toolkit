@@ -26,7 +26,9 @@ class ExtractTranslationsCommand extends Command
      * @var string
      */
     protected $description = 'Extracts translatable strings from source code into JSON file.';
+
     private TranslationsParser $translationsParser;
+
     private FrontendTranslationsParser $frontendTranslationsParser;
 
     /**
@@ -41,11 +43,11 @@ class ExtractTranslationsCommand extends Command
         $this->frontendTranslationsParser = $frontendTranslationsParser;
     }
 
-
     /**
      * Execute the console command.
      *
      * @return int
+     *
      * @throws FileNotFoundException
      */
     public function handle()

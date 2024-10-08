@@ -13,8 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TranslationsParser extends Command
 {
-//    private string $outputFileName;
+    //    private string $outputFileName;
     private string $outputLanguage;
+
     private string $defaultOutputLanguage = 'en';
 
     public function parseNovaTranslations(): void
@@ -102,7 +103,7 @@ class TranslationsParser extends Command
             $match = $match->substrReplace(null, strpos($match, "$quote)"), Str::length($match))
                 ->replace("__($quote", null);
 
-            $cleanMatches->push((string)$match);
+            $cleanMatches->push((string) $match);
         }
 
         return $cleanMatches;
@@ -122,14 +123,14 @@ class TranslationsParser extends Command
         $content = $this->getNewContent($matches, $outputFile, '"', $outputLanguage);
 
         // If there is no new content
-        if ((string)$content->trim('}') === PHP_EOL) {
+        if ((string) $content->trim('}') === PHP_EOL) {
             $oldContent = $oldContent->rtrim(PHP_EOL)->rtrim(',');
         }
 
         // Save translations
         Storage::disk('lang')->put(
             $outputFileName,
-            $oldContent . "\t" . $content
+            $oldContent."\t".$content
         );
     }
 
@@ -150,8 +151,8 @@ class TranslationsParser extends Command
     private function ensureFileExists($outputFileName): void
     {
         // Make sure translation file already exists
-        if (!Storage::disk('lang')->exists($outputFileName)) {
-            Storage::disk('lang')->put($outputFileName, "{" . PHP_EOL . "}");
+        if (! Storage::disk('lang')->exists($outputFileName)) {
+            Storage::disk('lang')->put($outputFileName, '{'.PHP_EOL.'}');
         }
     }
 
@@ -172,10 +173,11 @@ class TranslationsParser extends Command
 
                 if (Str::contains($match, '$')) {
                     $this->warn("[$defaultLanguage] Variable involved in translation: '$match'. Manual review needed!", OutputInterface::VERBOSITY_VERBOSE);
+
                     return false;
                 }
 
-                return !$exists;
+                return ! $exists;
             })
             // Add translation under the translation key
             ->map(function ($match) use ($quote, $defaultLanguage) {
@@ -188,19 +190,18 @@ class TranslationsParser extends Command
                 return "{$quote}$match{$quote}: {$quote}$lastWord{$quote},";
             })
             // Turn it to string
-            ->implode(PHP_EOL . "\t");
-
+            ->implode(PHP_EOL."\t");
 
         // Clean up string to json format
         return Str::of($content)
-            ->whenEndsWith(',', fn($string) => $string->replaceLast(',', null))
-            ->append(PHP_EOL . "}");
+            ->whenEndsWith(',', fn ($string) => $string->replaceLast(',', null))
+            ->append(PHP_EOL.'}');
     }
 
     private function getOldContent($outputFile): Stringable
     {
         // Get array with lines without empty lines
-        $array = Arr::where(explode(PHP_EOL, $outputFile), fn($line) => !empty($line));
+        $array = Arr::where(explode(PHP_EOL, $outputFile), fn ($line) => ! empty($line));
 
         // Remove "}"
         array_pop($array);
@@ -212,6 +213,6 @@ class TranslationsParser extends Command
         $content = $content->finish(',')->finish(PHP_EOL);
 
         // Remove comma when it's creating new translation file
-        return $content->whenEndsWith('{,' . PHP_EOL, fn($string) => $string->replaceLast(',', null));
+        return $content->whenEndsWith('{,'.PHP_EOL, fn ($string) => $string->replaceLast(',', null));
     }
 }
