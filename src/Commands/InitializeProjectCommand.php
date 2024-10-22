@@ -23,6 +23,8 @@ class InitializeProjectCommand extends Command
             ]
         );
 
+        // @TODO: Implement logic for initializing each part
+
         return 0;
     }
 }
