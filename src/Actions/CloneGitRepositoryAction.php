@@ -12,6 +12,7 @@ class CloneGitRepositoryAction extends Action
 
         $filesSystem->ensureDirectoryExists($target);
 
+        // @TODO: Untestable. Replace with Process facade
         exec("git clone -b $branch $url $target");
     }
 }
