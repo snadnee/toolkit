@@ -99,8 +99,8 @@ class TranslationsParser extends Command
             }
 
             // Clean up match
-            $match = $match->substrReplace(null, strpos($match, "$quote)"), Str::length($match))
-                ->replace("__($quote", null);
+            $match = $match->substrReplace('', strpos($match, "$quote)"), Str::length($match))
+                ->replace("__($quote", '');
 
             $cleanMatches->push((string)$match);
         }
