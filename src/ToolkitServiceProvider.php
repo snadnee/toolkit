@@ -2,6 +2,7 @@
 
 namespace Snadnee\Toolkit;
 
+use Snadnee\Toolkit\Commands\CheckCommand;
 use Snadnee\Toolkit\Commands\ExtractTranslationsCommand;
 use Snadnee\Toolkit\Commands\GitHooksSetupCommand;
 use Spatie\LaravelPackageTools\Package;
@@ -23,6 +24,7 @@ class ToolkitServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 GitHooksSetupCommand::class,
                 ExtractTranslationsCommand::class,
+                CheckCommand::class,
             ]);
     }
 }

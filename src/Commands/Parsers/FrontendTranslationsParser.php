@@ -11,7 +11,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 class FrontendTranslationsParser extends Command
 {
     private string $outputLanguage;
+
     private string $frontendPath;
+
     private array $translations = [];
 
     public function parseFrontendTranslations(): void
@@ -29,11 +31,11 @@ class FrontendTranslationsParser extends Command
         $frontendPath = base_path($this->frontendPath);
         $langPath = lang_path();
 
-//         Configure frontend disk
+        //         Configure frontend disk
         config(['filesystems.disks.frontend' => [
             'driver' => 'local',
             'root' => $frontendPath,
-            'links' => 'skip'
+            'links' => 'skip',
         ]]);
 
         $this->info("Setting up frontend disk at: $frontendPath", OutputInterface::VERBOSITY_VERBOSE);
@@ -47,11 +49,12 @@ class FrontendTranslationsParser extends Command
         $this->info("Setting up lang disk at: $langPath", OutputInterface::VERBOSITY_VERBOSE);
     }
 
-    private function parseFiles($files) {
+    private function parseFiles($files)
+    {
         $allMatches = [];
         foreach ($files as $file) {
             $this->info("Parsing file '$file'.", OutputInterface::VERBOSITY_VERY_VERBOSE);
-            $file = str_replace(Storage::disk('frontend')->path(''), '' ,$file);
+            $file = str_replace(Storage::disk('frontend')->path(''), '', $file);
             $matches = [];
             /**
              * Matches substring of calling of translate function '$_()' with all possible quote marks.
@@ -70,12 +73,13 @@ class FrontendTranslationsParser extends Command
                         // replace anything up to first occurrence of a quote-mark (including)
                         $translation = preg_replace('/^[\S\s]*["\'`]/U', '', $translation);
                         // replace last quote-mark
-                        $translation = preg_replace('/([\S\s]*)["\'`]\s*\)/', "$1", $translation);
+                        $translation = preg_replace('/([\S\s]*)["\'`]\s*\)/', '$1', $translation);
                         $translation = explode(',', $translation, 2);
                         if (count($translation) < 2) {
                             $this->error('unsupported translation:');
                             $this->error("Soubor: $file");
                             print_r($translation);
+
                             return 1;
                         }
                         $translationValue = [];
@@ -95,8 +99,8 @@ class FrontendTranslationsParser extends Command
                             $this->error('Duplicitní klíč překladu s rozdílnou hodnotou:');
                             $this->error("Soubor: $file");
 
-                            $this->line($translation[0] . ' = ' . $translation[1]);
-                            $this->line($translation[0] . ' = ' . $allMatches[$translation[0]]);
+                            $this->line($translation[0].' = '.$translation[1]);
+                            $this->line($translation[0].' = '.$allMatches[$translation[0]]);
 
                             return 1;
                         } else {
@@ -113,9 +117,10 @@ class FrontendTranslationsParser extends Command
         return $this;
     }
 
-    private function saveTranslations(): static {
+    private function saveTranslations(): static
+    {
         if (count($this->translations)) {
-            $this->info('Total translations: ' . count($this->translations));
+            $this->info('Total translations: '.count($this->translations));
             $outputFileName = Str::of($this->outputLanguage)->finish('.json');
             $json = json_encode($this->translations, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
             if (json_last_error() === 0) {
@@ -124,7 +129,7 @@ class FrontendTranslationsParser extends Command
                     $json
                 );
             } else {
-                $this->error("Array to JSON conversion failed: " . json_last_error_msg());
+                $this->error('Array to JSON conversion failed: '.json_last_error_msg());
             }
         }
 
@@ -138,10 +143,10 @@ class FrontendTranslationsParser extends Command
             $dirsAndFiles = array_merge(Storage::disk('frontend')->directories($path), Storage::disk('frontend')->files($path));
 
             foreach ($dirsAndFiles as $dirOrFile) {
-                if (is_dir(Storage::disk('frontend')->path($dirOrFile)) && !$this->isExcludedDir($dirOrFile)) {
+                if (is_dir(Storage::disk('frontend')->path($dirOrFile)) && ! $this->isExcludedDir($dirOrFile)) {
                     $this->getAllFiles($dirOrFile, $outputFiles);
                 } else {
-                    if (!$this->isExcludedFile($dirOrFile)) {
+                    if (! $this->isExcludedFile($dirOrFile)) {
                         $outputFiles[] = $dirOrFile;
                     }
                 }
@@ -152,7 +157,9 @@ class FrontendTranslationsParser extends Command
     private function isExcludedDir($dir): bool
     {
         $isExcluded = in_array($dir, ['node_modules', 'dist', 'assets', 'static', '.nuxt', '.output']);
-        if ($isExcluded) $this->line("Directory '$dir' is excluded.", null, OutputInterface::VERBOSITY_VERBOSE);
+        if ($isExcluded) {
+            $this->line("Directory '$dir' is excluded.", null, OutputInterface::VERBOSITY_VERBOSE);
+        }
 
         return $isExcluded;
     }
@@ -160,9 +167,11 @@ class FrontendTranslationsParser extends Command
     private function isExcludedFile($file): bool
     {
         $extension = pathinfo($file, PATHINFO_EXTENSION);
-        $isExcluded = !in_array($extension, ['vue', 'js', 'ts']);
+        $isExcluded = ! in_array($extension, ['vue', 'js', 'ts']);
 
-        if ($isExcluded) $this->line("File '$file' is excluded.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        if ($isExcluded) {
+            $this->line("File '$file' is excluded.", null, OutputInterface::VERBOSITY_VERY_VERBOSE);
+        }
 
         return $isExcluded;
     }
