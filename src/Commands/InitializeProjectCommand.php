@@ -3,6 +3,7 @@
 namespace Snadnee\Toolkit\Commands;
 
 use Illuminate\Console\Command;
+
 use function Laravel\Prompts\multiselect;
 
 class InitializeProjectCommand extends Command
