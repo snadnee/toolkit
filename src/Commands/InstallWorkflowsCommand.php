@@ -4,18 +4,18 @@ namespace Snadnee\Toolkit\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
 
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\info;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\select;
-use Illuminate\Support\Str;
 
 class InstallWorkflowsCommand extends Command
 {
     protected $signature = 'toolkit:install-workflows';
 
-    protected $description = "Install and configure workflows for Github Actions";
+    protected $description = 'Install and configure workflows for Github Actions';
 
     public function __construct(
         protected Filesystem $filesystem,
@@ -32,7 +32,7 @@ class InstallWorkflowsCommand extends Command
 
         $phpVersion = select(
             label: 'Select PHP version',
-            options: ['8.0', '8.1', '8.2', '8.3'],  
+            options: ['8.0', '8.1', '8.2', '8.3'],
         );
 
         $nodeVersion = select(
@@ -90,9 +90,9 @@ class InstallWorkflowsCommand extends Command
 
     protected function getPath(string $name): string
     {
-        $basePath = dirname($this->laravel['path']) . '/.github/workflows/';
+        $basePath = dirname($this->laravel['path']).'/.github/workflows/';
 
-        return $basePath . str_replace('\\', '/', $name) . '.yml';
+        return $basePath.str_replace('\\', '/', $name).'.yml';
     }
 
     protected function getStub(string $environment, bool $withDeployment): string
@@ -100,9 +100,9 @@ class InstallWorkflowsCommand extends Command
         $rootPath = dirname(dirname(dirname(__FILE__)));
 
         if ($withDeployment) {
-            return $rootPath . '/stubs/workflows/' . $environment . '-with-deployment.stub';
+            return $rootPath.'/stubs/workflows/'.$environment.'-with-deployment.stub';
         } else {
-            return $rootPath . '/stubs/workflows/' . $environment . '.stub';
+            return $rootPath.'/stubs/workflows/'.$environment.'.stub';
         }
     }
 }
