@@ -17,7 +17,7 @@ it('can generate workflows for all environments without deployment', function ()
         ->expectsQuestion('Select PHP version', '8.3')
         ->expectsQuestion('Select Node version', '20.18.0')
         ->expectsConfirmation('Do you want to automate deployments?', false)
-        ->expectsOutputToContain("Workflow for dev, staging and main environments created successfully.");
+        ->expectsOutputToContain('Workflow for dev, staging and main environments created successfully.');
 });
 
 it('can generate workflows for all environments with deployment', function () {
@@ -26,7 +26,7 @@ it('can generate workflows for all environments with deployment', function () {
         ->expectsQuestion('Select PHP version', '8.3')
         ->expectsQuestion('Select Node version', '20.18.0')
         ->expectsConfirmation('Do you want to automate deployments?', true)
-        ->expectsOutputToContain("Workflow for dev, staging and main environments created successfully.");
+        ->expectsOutputToContain('Workflow for dev, staging and main environments created successfully.');
 });
 
 dataset('workflow_combinations', [
