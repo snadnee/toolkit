@@ -2,4 +2,6 @@
 
 namespace Snadnee\Toolkit;
 
-class Toolkit {}
+class Toolkit
+{
+}
