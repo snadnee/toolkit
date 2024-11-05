@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
@@ -13,6 +14,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TranslationsParser extends Command
 {
+    public const DISKS_TO_CHECK = [
+        'nova' => 'app/Nova',
+        'livewire' => 'app/Livewire',
+        'filament' => 'app/Filament',
+        'views' => 'resources/views',
+    ];
+
+    public array $availableDisks = [];
+
     //    private string $outputFileName;
     private string $outputLanguage;
 
@@ -29,18 +39,26 @@ class TranslationsParser extends Command
         $this->cleanUp();
     }
 
+    public function parseAllTranslations(): void
+    {
+        $this->setUp();
+
+        foreach ($this->availableDisks as $disk) {
+            $files = Storage::disk($disk)->allFiles();
+
+            $this->parseFiles('/__\((.*?)\)/', $files);
+        }
+
+        $this->cleanUp();
+    }
+
     private function setUp(): void
     {
-        $novaPath = base_path('app/Nova');
+        foreach (self::DISKS_TO_CHECK as $disk => $path) {
+            $this->configureDisk($disk, $path);
+        }
+
         $langPath = lang_path();
-
-        // Configure Nova disk
-        config(['filesystems.disks.nova' => [
-            'driver' => 'local',
-            'root' => $novaPath,
-        ]]);
-
-        $this->info("Setting up nova disk at: $novaPath", OutputInterface::VERBOSITY_VERBOSE);
 
         // Configure lang disk
         config(['filesystems.disks.lang' => [
@@ -48,13 +66,29 @@ class TranslationsParser extends Command
             'root' => $langPath,
         ]]);
 
-        $this->info("Setting up lang disk at: $novaPath", OutputInterface::VERBOSITY_VERBOSE);
+        $this->info("Setting up lang disk at: $langPath", OutputInterface::VERBOSITY_VERBOSE);
+    }
+
+    private function configureDisk(string $disk, string $path): void
+    {
+        $diskPath = base_path($path);
+
+        if (File::exists($diskPath)) {
+            config(["filesystems.disks.$disk" => [
+                'driver' => 'local',
+                'root' => $diskPath,
+            ]]);
+
+            $this->info("Setting up $disk disk at: $diskPath", OutputInterface::VERBOSITY_VERBOSE);
+            $this->availableDisks[] = $disk;
+        }
     }
 
     private function cleanUp(): void
     {
-        // Remove Nova disk
-        config(['filesystems.disks.nova' => null]);
+        foreach ($this->availableDisks as $disk) {
+            config(["filesystems.disks.$disk" => null]);
+        }
 
         // Remove lang disk
         config(['filesystems.disks.lang' => null]);
