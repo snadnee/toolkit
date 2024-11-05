@@ -28,17 +28,6 @@ class TranslationsParser extends Command
 
     private string $defaultOutputLanguage = 'en';
 
-    public function parseNovaTranslations(): void
-    {
-        $this->setUp();
-
-        $files = Storage::disk('nova')->allFiles();
-
-        $this->parseFiles('/__\((.*?)\)/', $files);
-
-        $this->cleanUp();
-    }
-
     public function parseAllTranslations(): void
     {
         $this->setUp();
@@ -46,7 +35,7 @@ class TranslationsParser extends Command
         foreach ($this->availableDisks as $disk) {
             $files = Storage::disk($disk)->allFiles();
 
-            $this->parseFiles('/__\((.*?)\)/', $files);
+            $this->parseFiles('/__\((.*?)\)/', $files, $disk);
         }
 
         $this->cleanUp();
@@ -94,7 +83,7 @@ class TranslationsParser extends Command
         config(['filesystems.disks.lang' => null]);
     }
 
-    private function parseFiles(string $regex, array $files): void
+    private function parseFiles(string $regex, array $files, string $disk): void
     {
         $matches = collect();
 
@@ -102,7 +91,7 @@ class TranslationsParser extends Command
             ->reverse();
 
         foreach ($files as $filePath) {
-            $fileContent = Storage::disk('nova')->get($filePath);
+            $fileContent = Storage::disk($disk)->get($filePath);
 
             preg_match_all($regex, $fileContent, $rawMatches);
 

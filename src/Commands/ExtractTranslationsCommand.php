@@ -51,11 +51,6 @@ class ExtractTranslationsCommand extends Command
      */
     public function handle()
     {
-        $this->translationsParser
-            ->setOutputLanguage($this->option('lang'))
-            ->setOutput($this->output)
-            ->parseAllTranslations();
-
         if (File::exists(base_path($this->option('frontend-path')))) {
             $this->frontendTranslationsParser
                 ->setOutput($this->output)
@@ -63,6 +58,11 @@ class ExtractTranslationsCommand extends Command
                 ->setFrontEndPath($this->option('frontend-path'))
                 ->parseFrontendTranslations();
         }
+
+        $this->translationsParser
+            ->setOutputLanguage($this->option('lang'))
+            ->setOutput($this->output)
+            ->parseAllTranslations();
 
         $this->info('Translations generating successfully.');
 
