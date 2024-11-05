@@ -5,6 +5,7 @@ namespace Snadnee\Toolkit;
 use Snadnee\Toolkit\Commands\CheckCommand;
 use Snadnee\Toolkit\Commands\ExtractTranslationsCommand;
 use Snadnee\Toolkit\Commands\GitHooksSetupCommand;
+use Snadnee\Toolkit\Commands\InstallWorkflowsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -25,6 +26,7 @@ class ToolkitServiceProvider extends PackageServiceProvider
                 GitHooksSetupCommand::class,
                 ExtractTranslationsCommand::class,
                 CheckCommand::class,
+                InstallWorkflowsCommand::class,
             ]);
     }
 }
