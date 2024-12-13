@@ -2,6 +2,10 @@
 
 All notable changes to `:package_name` will be documented in this file.
 
+## v0.4.0 - 2024-12-13
+
+Snadnee Pest arch preset created
+
 ## 0.2.0 - 2024-10-08
 
 Add extract translation command
