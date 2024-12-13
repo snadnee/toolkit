@@ -35,20 +35,22 @@ class ToolkitServiceProvider extends PackageServiceProvider
 
     private function registerPestPresets(): void
     {
-        pest()->presets()->custom('snadnee', function () {
-            return [
-                expect(['dd', 'dump', 'ray'])->not->toBeUsed(),
-                expect('App\Jobs')->toImplement(ShouldQueue::class),
-                expect('App\Notifications')->toImplement(ShouldQueue::class),
-                expect('App\Notifications')->toHaveSuffix('Notification'),
-                expect('App\Jobs')->toHaveSuffix('Job'),
-                expect('App\Actions')->toHaveSuffix('Action'),
-                expect('App\Actions')->toExtend('\App\Actions\Action')->ignoring('App\Actions\Action'),
-                expect('App\Http\Requests')->toHaveSuffix('Request'),
-                expect('App\Policies')->toHaveSuffix('Policy'),
-                expect('App\Enums')->toBeEnums()->ignoring('App\Enums\Attributes'),
-                expect('App')->traits()->not->toHaveSuffix('Trait'),
-            ];
-        });
+        if (function_exists('pest')) {
+            \pest()->presets()->custom('snadnee', function () {
+                return [
+                    expect(['dd', 'dump', 'ray'])->not->toBeUsed(),
+                    expect('App\Jobs')->toImplement(ShouldQueue::class),
+                    expect('App\Notifications')->toImplement(ShouldQueue::class),
+                    expect('App\Notifications')->toHaveSuffix('Notification'),
+                    expect('App\Jobs')->toHaveSuffix('Job'),
+                    expect('App\Actions')->toHaveSuffix('Action'),
+                    expect('App\Actions')->toExtend('App\Actions\Action')->ignoring('App\Actions\Action'),
+                    expect('App\Http\Requests')->toHaveSuffix('Request'),
+                    expect('App\Policies')->toHaveSuffix('Policy'),
+                    expect('App\Enums')->toBeEnums()->ignoring('App\Enums\Attributes'),
+                    expect('App')->traits()->not->toHaveSuffix('Trait'),
+                ];
+            });
+        }
     }
 }
