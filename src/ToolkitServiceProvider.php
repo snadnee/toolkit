@@ -43,7 +43,7 @@ class ToolkitServiceProvider extends PackageServiceProvider
                 expect('App\Notifications')->toHaveSuffix('Notification'),
                 expect('App\Jobs')->toHaveSuffix('Job'),
                 expect('App\Actions')->toHaveSuffix('Action'),
-                expect('App\Actions')->toExtend('\App\Actions\Action'),
+                expect('App\Actions')->toExtend('\App\Actions\Action')->ignoring('App\Actions\Action'),
                 expect('App\Http\Requests')->toHaveSuffix('Request'),
                 expect('App\Policies')->toHaveSuffix('Policy'),
                 expect('App\Enums')->toBeEnums()->ignoring('App\Enums\Attributes'),
