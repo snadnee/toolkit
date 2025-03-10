@@ -5,8 +5,8 @@ return [
     'spell-check' => [
         'langPaths' => [
             '/lang/',
-            //'/lang/site/',
-            //'/lang/vendor/nova/',
+            // '/lang/site/',
+            // '/lang/vendor/nova/',
         ],
         'ignore-keys' => [
             'all' => [],
