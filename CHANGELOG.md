@@ -2,6 +2,10 @@
 
 All notable changes to `:package_name` will be documented in this file.
 
+## 0.4.3 - 2025-03-10
+
+Bugfix: Update expectations for App\Actions suffix and extension
+
 ## 0.4.2 - 2024-12-13
 
 Snadnee Pest arch fixed
