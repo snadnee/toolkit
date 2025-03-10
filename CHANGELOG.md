@@ -2,6 +2,10 @@
 
 All notable changes to `:package_name` will be documented in this file.
 
+## 0.4.2 - 2024-12-13
+
+Snadnee Pest arch fixed
+
 ## 0.4.1 - 2024-12-13
 
 Snadnee Pest arch fixed
