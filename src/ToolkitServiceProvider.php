@@ -22,7 +22,6 @@ class ToolkitServiceProvider extends PackageServiceProvider
         $package
             ->name('toolkit')
             ->hasConfigFile()
-            ->hasViews()
             ->hasCommands([
                 GitHooksSetupCommand::class,
                 ExtractTranslationsCommand::class,
